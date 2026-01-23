@@ -1,1 +1,70 @@
-node_modules
+# Dependencies
+node_modules/
+
+# iOS
+ios/Pods/
+ios/build/
+ios/**/build/
+ios/**/generated/
+ios/*.xcworkspace/xcuserdata/
+ios/*.xcodeproj/xcuserdata/
+ios/*.xcodeproj/project.xcuserdata/
+ios/*.xcodeproj/xcshareddata/
+ios/*.xcworkspace/xcshareddata/
+ios/.xcode.env.local
+ios/DerivedData/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+*.xccheckout
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Android
+android/app/build/
+android/build/
+android/.gradle/
+android/local.properties
+android/.idea/
+*.iml
+*.hprof
+.gradle/
+local.properties
+
+# OSX
+.DS_Store
+
+# React Native
+.expo/
+.expo-shared/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+
+# Metro
+.metro-health-check*
+
+# Testing
+coverage/
+
+# Misc
+*.log
+*.swp
+*~
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
