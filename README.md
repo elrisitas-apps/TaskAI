@@ -1,109 +1,244 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# TaskAI - Commitment Manager
 
-# Getting Started
+A React Native mobile app for managing commitments (expirations, deadlines, and open-ended tasks) with intelligent reminder scheduling.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## 🚀 Getting Started
 
-## Step 1: Start Metro
+### Prerequisites
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+- Node.js >= 20
+- React Native development environment set up
+- iOS: Xcode and CocoaPods
+- Android: Android Studio and Java Development Kit
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+### Installation
 
-```sh
-# Using npm
-npm start
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-# OR using Yarn
-yarn start
-```
+2. **Install iOS dependencies:**
+   ```bash
+   cd ios && pod install && cd ..
+   ```
 
-## Step 2: Build and run your app
+### Running the App
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
-```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
-```
-
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
+**iOS:**
+```bash
 npm run ios
-
-# OR using Yarn
-yarn ios
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+**Android:**
+```bash
+npm run android
+```
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+**Start Metro bundler:**
+```bash
+npm start
+```
 
-## Step 3: Modify your app
+## 📁 Project Structure
 
-Now that you have successfully run the app, let's make changes!
+```
+src/
+├── domain/              # Business logic and domain models
+│   ├── types.ts         # TypeScript types and interfaces
+│   ├── ladder.ts        # Reminder ladder generation logic
+│   └── urgency.ts       # Urgency scoring and sorting
+├── data/                # Data access layer
+│   ├── repositories/    # Repository interfaces
+│   │   ├── CommitmentsRepository.ts
+│   │   ├── RemindersRepository.ts
+│   │   └── AuthRepository.ts
+│   ├── mock/            # Mock implementations (for development)
+│   │   ├── MockCommitmentsRepository.ts
+│   │   ├── MockRemindersRepository.ts
+│   │   └── MockAuthRepository.ts
+│   ├── seed.ts          # Seed data for mock repositories
+│   └── repositories/index.ts  # Repository exports
+├── store/               # Redux state management
+│   ├── slices/
+│   │   ├── onboardingSlice.ts
+│   │   ├── authSlice.ts
+│   │   └── commitmentsSlice.ts
+│   └── index.ts         # Store configuration with redux-persist
+├── navigation/          # Navigation setup
+│   ├── types.ts         # Navigation type definitions
+│   └── RootNavigator.tsx
+├── ui/
+│   ├── components/     # Reusable UI components
+│   │   ├── Screen.tsx
+│   │   ├── Button.tsx
+│   │   ├── Input.tsx
+│   │   ├── Badge.tsx
+│   │   └── ListItem.tsx
+│   └── screens/         # Screen components
+│       ├── OnboardingCarouselScreen.tsx
+│       ├── SignInScreen.tsx
+│       ├── SignUpScreen.tsx
+│       ├── HomeScreen.tsx
+│       ├── AddEditCommitmentScreen.tsx
+│       ├── CommitmentDetailScreen.tsx
+│       └── ConfirmCommitmentScreen.tsx
+└── utils/               # Utility functions
+    ├── date.ts          # Date formatting utilities
+    ├── id.ts            # ID generation
+    └── validation.ts    # Zod validation schemas
+```
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+## 🏗️ Architecture
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+### Data Access Layer
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+The app uses a **repository pattern** to abstract data access. All UI components interact with repositories through interfaces, not direct implementations.
 
-## Congratulations! :tada:
+**Current Implementation:** Mock repositories (`src/data/mock/`)
 
-You've successfully run and modified your React Native App. :partying_face:
+**To Switch to Backend (Firebase/Supabase):**
 
-### Now what?
+1. Create new repository implementations in `src/data/firebase/` or `src/data/supabase/`
+2. Update `src/data/repositories/index.ts` to export the new implementations:
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+```typescript
+// Replace mock with real implementations
+export const commitmentsRepository: CommitmentsRepository = new FirebaseCommitmentsRepository();
+export const remindersRepository: RemindersRepository = new FirebaseRemindersRepository();
+export const authRepository: AuthRepository = new FirebaseAuthRepository();
+```
 
-# Troubleshooting
+The UI layer requires **no changes** - it will automatically use the new backend.
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+### State Management
 
-# Learn More
+- **Redux Toolkit** for state management
+- **redux-persist** for persisting onboarding completion and auth session
+- All async operations use Redux thunks (no sagas)
 
-To learn more about React Native, take a look at the following resources:
+### Navigation Flow
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+1. **Onboarding** → First-time users see 3-slide carousel
+2. **Authentication** → Sign in/Sign up screens (mock auth)
+3. **Main App** → Home screen with commitments list
 
-# TaskAI
+Navigation automatically routes based on:
+- `onboarding.hasSeenOnboarding` (persisted)
+- `auth.session` (persisted)
 
-TaskAI is a React Native application designed to help users manage and organize their tasks efficiently.
+## 📱 Features
 
-## Project Status
+### Commitment Types
 
-This is a React Native project currently in development.
+1. **Expiration** - Items with expiration dates (passport, insurance, warranty)
+   - Reminder ladder: 90d, 30d, 7d, 1d before expiration
 
-## Getting Started
+2. **Deadline** - Tasks with deadlines
+   - Reminder ladder: 14d, 7d, 1d before deadline
 
-More information about setup and installation will be added as the project develops.
+3. **Open-ended** - Important items without fixed dates
+   - Reminder ladder: 14d after creation, then every 30d
+
+### Core Functionality
+
+- ✅ Create commitments with templates or custom entries
+- ✅ View commitments sorted by urgency
+- ✅ Mark commitments as done
+- ✅ Snooze reminders (1, 3, or 7 days)
+- ✅ View commitment details with reminder schedule
+- ✅ Edit commitments
+
+## 🔧 Backend Integration Points
+
+### Where to Add Backend Code
+
+1. **Repository Implementations** (`src/data/firebase/` or `src/data/supabase/`)
+   - Implement the same interfaces as mock repositories
+   - Replace async mock delays with real API calls
+
+2. **Authentication** (`src/data/repositories/AuthRepository.ts`)
+   - Replace mock sign in/up with Firebase Auth or Supabase Auth
+   - Handle real token management
+
+3. **Data Sync** (Future)
+   - Add real-time listeners in repository implementations
+   - Update Redux store on data changes
+
+### Example: Firebase Integration
+
+```typescript
+// src/data/firebase/FirebaseCommitmentsRepository.ts
+import { CommitmentsRepository } from '../repositories/CommitmentsRepository';
+import { Commitment } from '../../domain/types';
+import { collection, getDocs, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { db } from './firebaseConfig';
+
+export class FirebaseCommitmentsRepository implements CommitmentsRepository {
+  async getAll(): Promise<Commitment[]> {
+    const snapshot = await getDocs(collection(db, 'commitments'));
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Commitment));
+  }
+  
+  // ... implement other methods
+}
+```
+
+## 🧪 Mock Data
+
+The app includes seed data in `src/data/seed.ts`:
+- Active commitments (expiring soon, far future)
+- Overdue commitments
+- Completed commitments
+- Open-ended commitments
+
+## 📦 Dependencies
+
+### Core
+- `react-native` - React Native framework
+- `@reduxjs/toolkit` - Redux state management
+- `react-redux` - React bindings for Redux
+- `redux-persist` - State persistence
+- `@react-navigation/native` - Navigation library
+- `@react-navigation/native-stack` - Stack navigator
+
+### Utilities
+- `zod` - Schema validation
+- `date-fns` - Date manipulation
+- `uuid` - ID generation
+- `@react-native-async-storage/async-storage` - Local storage
+- `@react-native-community/datetimepicker` - Date picker
+
+## 🐛 Troubleshooting
+
+### iOS Build Issues
+- Run `cd ios && pod install` after adding new dependencies
+- Clean build: `cd ios && xcodebuild clean`
+
+### Android Build Issues
+- Clean: `cd android && ./gradlew clean`
+- Rebuild: `npm run android`
+
+### Metro Bundler Issues
+- Clear cache: `npm start -- --reset-cache`
+
+## 📝 Development Notes
+
+- All repository calls are async (Promise-based) to mimic real network calls
+- Mock repositories include artificial delays (50-500ms) to simulate network latency
+- Redux state is persisted for onboarding and auth only (not commitments - they're fetched fresh)
+- Reminders are generated automatically when commitments are created
+- Urgency scoring considers: expiration status, next reminder date, days until target
+
+## 🚧 Future Enhancements
+
+- [ ] Real backend integration (Firebase/Supabase)
+- [ ] Push notifications for reminders
+- [ ] AI features (OCR, voice input) - interfaces ready
+- [ ] Meetings feature
+- [ ] Offline support
+- [ ] Data export
+
+## 📄 License
+
+See LICENSE file for details.

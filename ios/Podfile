@@ -14,6 +14,9 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
+# New Architecture is required as of React Native 0.82+ (JS uses TurboModules by default).
+# Do not set RCT_NEW_ARCH_ENABLED=0 or the native binary won't register PlatformConstants.
+
 target 'TaskAI' do
   config = use_native_modules!
 
