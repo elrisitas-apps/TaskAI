@@ -20,7 +20,15 @@ type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 type RouteProp = {
   key: string;
   name: 'AddEditCommitment';
-  params?: { commitmentId?: string };
+  params?: {
+    commitmentId?: string;
+    initialCommitment?: {
+      type: CommitmentType;
+      title: string;
+      description?: string | null;
+      targetAt: string | null;
+    };
+  };
 };
 
 const templates = [
@@ -38,18 +46,21 @@ export default function AddEditCommitmentScreen() {
   const { commitments } = useSelector((state: RootState) => state.commitments);
   
   const commitmentId = route.params?.commitmentId;
+  const initialFromAi = route.params?.initialCommitment;
   const existingCommitment = commitmentId
     ? commitments.find((c) => c.id === commitmentId)
     : null;
+  const initial = existingCommitment ?? initialFromAi;
 
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
-  const [type, setType] = useState<CommitmentType>(existingCommitment?.type ?? CommitmentTypeEnum.DEADLINE);
-  const [title, setTitle] = useState(existingCommitment?.title || COMMON_STRINGS.Empty);
+  const [type, setType] = useState<CommitmentType>(initial?.type ?? CommitmentTypeEnum.DEADLINE);
+  const [title, setTitle] = useState(initial?.title || COMMON_STRINGS.Empty);
+  const [description, setDescription] = useState(initial?.description ?? COMMON_STRINGS.Empty);
   const [targetDate, setTargetDate] = useState<Date | null>(
-    existingCommitment?.targetAt ? new Date(existingCommitment.targetAt) : null
+    initial?.targetAt ? new Date(initial.targetAt) : null
   );
   const [dateInput, setDateInput] = useState(
-    existingCommitment?.targetAt ? format(new Date(existingCommitment.targetAt), 'yyyy-MM-dd') : COMMON_STRINGS.Empty
+    initial?.targetAt ? format(new Date(initial.targetAt), 'yyyy-MM-dd') : COMMON_STRINGS.Empty
   );
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -58,6 +69,12 @@ export default function AddEditCommitmentScreen() {
       dispatch(fetchCommitmentById(commitmentId));
     }
   }, [commitmentId, existingCommitment, dispatch]);
+
+  useEffect(() => {
+    if (existingCommitment && commitmentId) {
+      setDescription(existingCommitment.description ?? COMMON_STRINGS.Empty);
+    }
+  }, [existingCommitment?.description, commitmentId]);
 
   const handleTemplateSelect = (templateId: string) => {
     const template = templates.find((t) => t.id === templateId);
@@ -106,6 +123,7 @@ export default function AddEditCommitmentScreen() {
       const formData: CommitmentFormData = {
         type,
         title,
+        description: description.trim() || null,
         targetAt: targetDate ? targetDate.toISOString() : null,
         source: selectedTemplate ? CommitmentSourceEnum.TEMPLATE : CommitmentSourceEnum.MANUAL,
       };
@@ -129,6 +147,7 @@ export default function AddEditCommitmentScreen() {
     const formData = {
       type,
       title,
+      description: description.trim() || null,
       targetAt: type === CommitmentTypeEnum.OPEN ? null : (targetDate ? targetDate.toISOString() : null),
       source: selectedTemplate ? CommitmentSourceEnum.TEMPLATE : CommitmentSourceEnum.MANUAL,
     };
@@ -183,6 +202,13 @@ export default function AddEditCommitmentScreen() {
           onChangeText={setTitle}
           placeholder={FORM_STRINGS.ENTER_COMMITMENT_TITLE}
           error={errors.title}
+        />
+
+        <Input
+          label={FORM_STRINGS.DESCRIPTION}
+          value={description}
+          onChangeText={setDescription}
+          placeholder={FORM_STRINGS.ENTER_DESCRIPTION}
         />
 
         {type !== CommitmentTypeEnum.OPEN && (

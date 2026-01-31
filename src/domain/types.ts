@@ -12,6 +12,8 @@ export interface Commitment {
   id: string;
   type: CommitmentType;
   title: string;
+  /** Optional details (e.g. "I pay 40 dollars a month and need to renew it"). Not shown on homepage. */
+  description?: string | null;
   targetAt: string | null; // ISO string, null for open-ended
   status: CommitmentStatus;
   source: CommitmentSource;

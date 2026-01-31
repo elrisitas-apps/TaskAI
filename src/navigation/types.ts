@@ -10,12 +10,22 @@ export type RootStackParamList = {
 export type AppStackParamList = {
   Home: undefined;
   Expired: undefined;
-  AddEditCommitment: { commitmentId?: string };
+  AddEditCommitment: {
+    commitmentId?: string;
+    /** Pre-fill form (e.g. from AI). Used when commitmentId is absent. */
+    initialCommitment?: {
+      type: CommitmentType;
+      title: string;
+      description?: string | null;
+      targetAt: string | null;
+    };
+  };
   CommitmentDetail: { commitmentId: string };
   ConfirmCommitment: {
     commitment: {
       type: CommitmentType;
       title: string;
+      description?: string | null;
       targetAt: string | null;
       source: CommitmentSource;
     };

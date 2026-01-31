@@ -37,6 +37,7 @@ type RouteProp = {
     commitment: {
       type: CommitmentType;
       title: string;
+      description?: string | null;
       targetAt: string | null;
       source: CommitmentSource;
     };
@@ -57,6 +58,7 @@ export default function ConfirmCommitmentScreen() {
     id: COMMON_STRINGS.Empty,
     type: commitment.type,
     title: commitment.title,
+    description: commitment.description ?? null,
     targetAt: commitment.targetAt,
     status: CommitmentStatusEnum.ACTIVE,
     source: commitment.source,
@@ -174,6 +176,7 @@ export default function ConfirmCommitmentScreen() {
           updates: {
             type: commitment.type,
             title: commitment.title,
+            description: commitment.description ?? null,
             targetAt: commitment.targetAt,
             source: commitment.source,
           },
@@ -193,6 +196,7 @@ export default function ConfirmCommitmentScreen() {
         createCommitment({
           type: commitment.type,
           title: commitment.title,
+          description: commitment.description ?? null,
           targetAt: commitment.targetAt,
           status: CommitmentStatusEnum.ACTIVE,
           source: commitment.source,
@@ -242,6 +246,17 @@ export default function ConfirmCommitmentScreen() {
             </Text>
             <Text style={[styles.value, { color: semantic.text(isDark) }]}>
               {formatDate(commitment.targetAt)}
+            </Text>
+          </View>
+        )}
+
+        {commitment.description != null && commitment.description.trim() !== '' && (
+          <View style={styles.section}>
+            <Text style={[styles.label, { color: semantic.textSecondary(isDark) }]}>
+              {FORM_STRINGS.DESCRIPTION}
+            </Text>
+            <Text style={[styles.value, { color: semantic.text(isDark) }]}>
+              {commitment.description}
             </Text>
           </View>
         )}

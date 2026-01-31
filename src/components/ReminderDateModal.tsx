@@ -7,8 +7,8 @@ import {
   StyleSheet,
   useColorScheme,
   KeyboardAvoidingView,
-  Platform,
 } from 'react-native';
+import { isIos } from '../constants/Layout';
 import { ReminderDateModalProps } from '../constants/Interfaces';
 import { semantic, overlay, misc } from '../constants/Colors';
 import { FORM_STRINGS, BUTTON_STRINGS, SCREEN_TITLES, ERROR_STRINGS, COMMON_STRINGS } from '../constants/Strings';
@@ -107,7 +107,7 @@ export default function ReminderDateModal({
         onPress={onClose}
       >
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          behavior={isIos ? 'padding' : undefined}
           style={styles.centered}
         >
           <TouchableOpacity

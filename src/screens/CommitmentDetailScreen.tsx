@@ -270,6 +270,17 @@ export default function CommitmentDetailScreen() {
           </View>
         )}
 
+        {commitment.description != null && commitment.description.trim() !== '' && (
+          <View style={styles.section}>
+            <Text style={[styles.label, { color: semantic.textSecondary(isDark) }]}>
+              {FORM_STRINGS.DESCRIPTION}
+            </Text>
+            <Text style={[styles.value, { color: semantic.text(isDark) }]}>
+              {commitment.description}
+            </Text>
+          </View>
+        )}
+
         <View style={styles.section}>
           <Text style={[styles.label, { color: semantic.textSecondary(isDark) }]}>
             {FORM_STRINGS.CREATED_AT}

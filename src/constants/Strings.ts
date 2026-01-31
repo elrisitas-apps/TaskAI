@@ -87,6 +87,8 @@ export const FORM_STRINGS = {
   ENTER_PASSWORD: 'Enter your password',
   ENTER_NAME: 'Enter your name',
   ENTER_COMMITMENT_TITLE: 'Enter task title',
+  DESCRIPTION: 'Description',
+  ENTER_DESCRIPTION: 'Optional details (e.g. notes, amounts)',
   DATE_FORMAT_PLACEHOLDER: '2024-12-31',
   DATE_FORMAT_LABEL: 'Target Date (YYYY-MM-DD)',
   OPEN_ENDED: 'Open-ended',

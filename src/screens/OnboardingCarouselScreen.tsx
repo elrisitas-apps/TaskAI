@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Dimensions, useColorScheme } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, useColorScheme } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -7,12 +7,11 @@ import { RootStackParamList } from '../navigation/types';
 import { setOnboardingComplete } from '../store/slices/onboardingSlice';
 import { semantic, brand, misc } from '../constants/Colors';
 import { ONBOARDING_STRINGS } from '../constants/Strings';
+import { width } from '../constants/Layout';
 import Screen from '../components/Screen';
 import Button from '../components/Button';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
-
-const { width } = Dimensions.get('window');
 
 const slides = ONBOARDING_STRINGS.SLIDES;
 

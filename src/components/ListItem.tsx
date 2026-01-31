@@ -1,7 +1,8 @@
 import React from 'react';
-import { TouchableOpacity, View, Text, StyleSheet, Platform } from 'react-native';
+import { TouchableOpacity, View, Text, StyleSheet } from 'react-native';
 import { useColorScheme } from 'react-native';
 import { semantic, shadow } from '../constants/Colors';
+import { isIos } from '../constants/Layout';
 import Badge from './Badge';
 import { ListItemProps } from '../constants/Interfaces';
 
@@ -27,7 +28,7 @@ export default function ListItem({
         styles.container,
         { backgroundColor: semantic.surface(isDark) },
         accentColor ? { borderLeftWidth: 4, borderLeftColor: accentColor } : undefined,
-        Platform.OS === 'ios'
+        isIos
           ? {
               shadowColor: shadow.color,
               shadowOffset: shadow.offset,
